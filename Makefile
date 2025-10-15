@@ -12,19 +12,18 @@ endif
 
 ifeq ($(CONFIG_BBG),y)
   $(info -- Baseband-guard: CONFIG_BBG enabled, now checking...)
-  ifneq ($(findstring baseband_guard,$(CONFIG_LSM)),baseband_guard)
-    $(info -- Baseband-guard: BBG not enable in CONFIG_LSM, but CONFIG_BBG is y,abort...)
-    $(error Please follow Baseband-guard's README.md, to correct integrate)
-  else
-    $(info -- Baseband-guard: Okay, Baseband_guard was found in CONFIG_LSM)
-  endif
-else
   ifeq ($(shell test $(VERSION) -ge 5; echo $$?),0)
-    $(warning CONFIG_LSM is blank, Is a mistake or running command "make mrproper"?)
+    ifneq ($(findstring baseband_guard,$(CONFIG_LSM)),baseband_guard)
+      $(info -- Baseband-guard: BBG not enable in CONFIG_LSM, but CONFIG_BBG is y,abort...)
+      $(error Please follow Baseband-guard's README.md, to correct integrate)
+    else
+      $(info -- Baseband-guard: Okay, Baseband_guard was found in CONFIG_LSM)
+    endif
   endif
 endif
 
 $(info -- BBG was enabled!)
 $(info -- BBG version: $(COMMIT_SHA))
 ccflags-y += -DBBG_VERSION=$(COMMIT_SHA)
+
 
